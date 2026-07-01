@@ -1,0 +1,918 @@
+/* ==========================================================================
+   1. الإعدادات الأساسية ومتغيرات التصميم الفلكي (Setup & Cosmic Tokens)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@300;400;500;700&family=Orbitron:wght@500;700&display=swap');
+
+:root {
+    /* باليت ألوان الفضاء الروحي (Cosmic Spiritual Palette) */
+    --bg-space-deep: #030712;      /* خلفية الفضاء العميقة المطلقة */
+    --bg-nebula-void: #090d16;     /* خلفية العناصر شبه الشفافة */
+    --bg-star-cluster: #0f172a;    /* خلفية البطاقات والقوائم */
+    --bg-glass-overlay: rgba(3, 7, 18, 0.85);
+
+    /* ألوان النصوص */
+    --text-pure: #ffffff;
+    --text-luminous: #f1f5f9;      /* أبيض دافئ مضيء */
+    --text-celestial: #94a3b8;     /* أزرق رمادي سماوي باهت */
+    --text-faded: #475569;         /* نصوص ثانوية غامقة */
+
+    /* ألوان النيون المضيئة (Luminous Accents) */
+    --color-aurora-blue: #3b82f6;
+    --color-aurora-glow: rgba(59, 130, 246, 0.3);
+    --color-aurora-hover: #60a5fa;
+
+    --color-pulsar-green: #10b981;
+    --color-pulsar-glow: rgba(16, 185, 129, 0.3);
+    --color-pulsar-hover: #34d399;
+
+    --color-nova-orange: #f97316;
+    --color-nova-glow: rgba(249, 115, 22, 0.25);
+
+    --color-error: #ef4444;
+    --color-error-glow: rgba(239, 68, 68, 0.2);
+
+    /* فقاعات المحادثة */
+    --bubble-user: linear-gradient(135deg, #2563eb, #1d40af);
+    --bubble-quran: linear-gradient(160deg, #0f172a, #070c16);
+    --bubble-system: rgba(148, 163, 184, 0.05);
+
+    /* الخطوط وهيكل القياسات */
+    --font-quran: 'Amiri Quran', serif;
+    --font-ui: 'Tajawal', "Segoe UI", sans-serif;
+    --font-tech: 'Orbitron', sans-serif;
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
+    --radius-pill: 9999px;
+
+    /* الحماية والمؤثرات */
+    --shadow-cosmic: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+    --shadow-glow: 0 0 25px var(--color-aurora-glow);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+}
+
+/* التصفير القياسي لضمان الأداء الفائق والتحكم التام */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    height: 100dvh; /* استغلال كامل الارتفاع الديناميكي لتجنب مشاكل المتصفحات */
+    overflow: hidden; /* إلغاء التمرير العام لمنع السلوك المطاطي للصفحة (Rubber-banding) */
+    background-color: var(--bg-space-deep);
+    color: var(--text-luminous);
+    font-family: var(--font-ui);
+    direction: rtl;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* جدار من التدرجات الفلكية الهادئة في الخلفية */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+        radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 45%),
+        url('https://www.transparenttextures.com/patterns/stardust.png');
+    background-repeat: repeat;
+    opacity: 0.7;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* تخصيص شريط التمرير داخل المساحات القابلة للتمرير */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.12);
+    border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-aurora-blue);
+}
+
+/* ==========================================================================
+   2. شاشة التحميل الذكية الفورية (Loading Splash Screen)
+   ========================================================================== */
+.loading-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--bg-space-deep);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity var(--transition-smooth), visibility var(--transition-smooth);
+}
+
+.loader-content {
+    text-align: center;
+    z-index: 2;
+}
+
+.loader-logo {
+    font-family: var(--font-tech);
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--color-aurora-blue);
+    text-shadow: var(--shadow-glow), 0 0 2px #fff;
+    letter-spacing: 2px;
+}
+.loader-logo span {
+    font-family: var(--font-ui);
+    font-size: 1.15rem;
+    color: var(--text-celestial);
+    display: block;
+    margin-top: 6px;
+    letter-spacing: 5px;
+    font-weight: 300;
+}
+
+.loader-status {
+    font-size: 0.95rem;
+    color: var(--text-celestial);
+    margin: 25px 0 15px 0;
+    font-weight: 300;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+.loading-dots .dot {
+    width: 9px;
+    height: 9px;
+    background-color: var(--color-aurora-blue);
+    border-radius: 50%;
+    animation: pulseBounce 1.4s infinite ease-in-out both;
+    box-shadow: 0 0 12px var(--color-aurora-glow);
+}
+.loading-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes pulseBounce {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================================================
+   3. حاوية التطبيق الرئيسية (Main Application Container)
+   ========================================================================== */
+.app-container {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+/* ==========================================================================
+   4. القائمة الجانبية (Futuristic Sidebar Drawer)
+   ========================================================================== */
+.sidebar {
+    width: 320px;
+    min-width: 320px;
+    height: 100%;
+    background-color: var(--bg-nebula-void);
+    border-left: 1px solid rgba(148, 163, 184, 0.06);
+    display: flex;
+    flex-direction: column;
+    padding: 1.8rem 1.2rem;
+    z-index: 100;
+    transition: transform var(--transition-smooth), width var(--transition-smooth);
+    overflow: hidden;
+}
+
+.sidebar-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+    text-align: center;
+}
+.sidebar-header .logo {
+    font-family: var(--font-tech);
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--color-aurora-blue);
+    text-shadow: var(--shadow-glow);
+}
+.sidebar-header .logo span {
+    font-family: var(--font-ui);
+    font-size: 0.5em;
+    display: block;
+    color: var(--text-celestial);
+    margin-top: -3px;
+    letter-spacing: 3px;
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* تمكين التمرير الداخلي المنفصل للقائمة الجانبية */
+    padding-right: 2px;
+}
+
+.nav-list {
+    list-style: none;
+    margin-bottom: 1.5rem;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1.1rem;
+    color: var(--text-celestial);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    margin-bottom: 0.4rem;
+    border: 1px solid transparent;
+    transition: var(--transition-smooth);
+}
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    margin-left: 0.9rem;
+    color: var(--text-celestial);
+    transition: transform var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.nav-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* الحالات النشطة وتأثير التحويم الجاذب */
+.nav-link:hover {
+    background-color: rgba(59, 130, 246, 0.06);
+    color: var(--text-pure);
+    border-color: rgba(59, 130, 246, 0.12);
+    transform: translateX(-4px);
+}
+.nav-link:hover .nav-icon {
+    transform: scale(1.1) rotate(-3deg);
+    color: var(--color-aurora-hover);
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, var(--color-aurora-blue), #1e40af);
+    color: var(--text-pure);
+    font-weight: 700;
+    box-shadow: 0 8px 24px -8px var(--color-aurora-glow);
+}
+.nav-link.active .nav-icon {
+    color: var(--text-pure) !important;
+}
+
+.nav-link.highlight-link {
+    background-color: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.1);
+    color: #34d399;
+    width: 90%;
+}
+.nav-link.highlight-link:hover {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: var(--text-pure);
+}
+
+/* تصنيف وجدولة المحادثات الأخيرة */
+.nav-section-container {
+    margin: 1.5rem 0;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.nav-section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-faded);
+    display: block;
+    margin-bottom: 0.8rem;
+    padding-right: 0.6rem;
+}
+
+.recent-recitations-list {
+    list-style: none;
+}
+.recent-recitations-list li {
+    padding: 0.8rem 1.1rem;
+    font-size: 0.88rem;
+    color: var(--text-celestial);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    margin-bottom: 0.35rem;
+    transition: var(--transition-smooth);
+    border-right: 3px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+}
+.recent-recitations-list li:hover {
+    background-color: rgba(148, 163, 184, 0.03);
+    color: var(--text-luminous);
+    border-right-color: var(--color-aurora-blue);
+    transform: translateX(-3px);
+}
+.recent-recitations-list li.active {
+    background-color: rgba(59, 130, 246, 0.08);
+    color: var(--text-pure);
+    border-right-color: var(--color-aurora-blue);
+    font-weight: 500;
+}
+
+/* شريط تتبع الختمة الروحي المطور */
+.khatma-progress-widget {
+    padding: 1.1rem;
+    background-color: var(--bg-star-cluster);
+    border: 1px solid rgba(148, 163, 184, 0.05);
+    border-radius: var(--radius-md);
+    margin-top: auto;
+}
+.khatma-progress-widget .khatma-title {
+    font-size: 0.8rem;
+    color: var(--text-celestial);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+}
+.progress-track {
+    width: 100%;
+    height: 6px;
+    background-color: var(--bg-space-deep);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-pulsar-green), var(--color-aurora-blue));
+    border-radius: var(--radius-pill);
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px var(--color-pulsar-glow);
+}
+
+/* ==========================================================================
+   5. واجهة الدردشة (Primary Chat Interface)
+   ========================================================================== */
+.chat-interface {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--bg-space-deep);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ترويسة الدردشة شبه الشفافة بتأثير الزجاج الضبابي */
+.chat-header {
+    height: 70px;
+    min-height: 70px;
+    padding: 0 1.8rem;
+    background-color: var(--bg-glass-overlay);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+.chat-header .app-title {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--text-pure);
+}
+
+.chat-tools {
+    display: flex;
+    gap: 0.5rem;
+}
+.tool-action-btn {
+    background: none;
+    border: none;
+    color: var(--text-celestial);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition-bounce);
+}
+.tool-action-btn svg {
+    width: 20px;
+    height: 20px;
+}
+.tool-action-btn:hover {
+    color: var(--color-aurora-hover);
+    background-color: rgba(59, 130, 246, 0.08);
+    transform: scale(1.1) rotate(6deg);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+}
+
+/* حاوية التمرير للرسائل وتوزيعها الفسيح */
+.message-area-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 2.2rem 1.8rem;
+    -webkit-overflow-scrolling: touch; /* تمرير مطاطي سريع ومريح على الهواتف */
+    display: flex;
+    flex-direction: column;
+}
+
+.message-area {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* تخصيص مظهر فقاعات الرسائل المتناسق */
+.message-bubble {
+    max-width: 82%;
+    padding: 1.1rem 1.5rem;
+    border-radius: var(--radius-lg);
+    line-height: 1.9;
+    font-size: 0.96rem;
+    box-shadow: var(--shadow-cosmic);
+    position: relative;
+    animation: bubbleEnter 0.45s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    opacity: 0;
+    transform: translateY(15px);
+}
+
+@keyframes bubbleEnter {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* فقاعة المستخدم (صادرة لليسار) */
+.message-bubble.user {
+    background: var(--bubble-user);
+    color: var(--text-pure);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 10px 25px -10px rgba(37, 99, 235, 0.4);
+}
+
+/* فقاعة الآيات القرآنية (واردة لليمين) */
+.message-bubble.quran {
+    background: var(--bubble-quran);
+    color: var(--text-luminous);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgba(148, 163, 184, 0.04);
+}
+
+/* تنسيق النص القرآني الجليل داخل الفقاعة */
+.message-bubble.quran .ayah-text {
+    font-family: var(--font-quran);
+    font-size: 2.1rem;
+    line-height: 2.3;
+    color: var(--text-pure);
+    text-align: center;
+    margin-bottom: 0.8rem;
+    display: block;
+    cursor: pointer;
+    transition: color var(--transition-smooth);
+}
+.message-bubble.quran .ayah-text:hover {
+    color: var(--color-pulsar-hover);
+}
+.message-bubble.quran .ayah-number-symbol {
+    font-family: var(--font-ui);
+    font-size: 0.6em;
+    color: var(--color-pulsar-hover);
+    margin: 0 0.5rem;
+    text-shadow: 0 0 10px var(--color-pulsar-glow);
+    user-select: none;
+}
+
+/* البسملة الجمالية المميزة بروعتها البصرية */
+.message-bubble.quran .bismillah {
+    font-family: var(--font-quran);
+    font-size: 1.6rem;
+    text-align: center;
+    margin-bottom: 1.3rem;
+    display: block;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+    color: var(--color-nova-orange);
+    text-shadow: 0 0 15px var(--color-nova-glow);
+}
+
+.message-bubble.quran .surah-info {
+    font-size: 0.78rem;
+    color: var(--text-celestial);
+    display: block;
+    margin-top: 1rem;
+    text-align: left;
+    font-weight: 300;
+    opacity: 0.85;
+}
+
+/* فقاعات النظام والتفاسير */
+.message-bubble.system, .message-bubble.tafsir-bubble {
+    background-color: var(--bubble-system);
+    border: 1px dashed rgba(148, 163, 184, 0.1);
+    color: var(--text-celestial);
+    align-self: center;
+    max-width: 90%;
+    font-size: 0.9rem;
+    border-radius: var(--radius-md);
+    box-shadow: none;
+}
+.message-bubble.system.error {
+    background-color: var(--color-error-glow);
+    border: 1px solid var(--color-error);
+    color: var(--color-error);
+}
+
+/* إضاءة وتمييز كلمات البحث المكتشفة داخل الآيات */
+.message-bubble.quran .ayah-text .highlight {
+    background-color: rgba(16, 185, 129, 0.14);
+    color: #34d399;
+    padding: 0 6px;
+    border-radius: 4px;
+    border: 1px dashed rgba(16, 185, 129, 0.3);
+    text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
+/* أدوات التفاعل السريعة الملحقة أسفل الآية الكريمة */
+.ayah-tools, .ayah-quick-tools {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.05);
+}
+.ayah-quick-tools {
+    border-top: none;
+    margin-top: 0.6rem;
+    padding-top: 0;
+}
+
+.tool-btn {
+    background-color: rgba(148, 163, 184, 0.04);
+    border: 1px solid rgba(148, 163, 184, 0.06);
+    color: var(--text-celestial);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.82rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: var(--transition-bounce);
+    font-family: var(--font-ui);
+}
+.tool-btn:hover {
+    background-color: var(--color-aurora-blue);
+    color: var(--text-pure);
+    border-color: var(--color-aurora-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--color-aurora-glow);
+}
+
+/* التفسير المنسق بتصميم مريح جداً للقراءة */
+.tafsir-header {
+    font-weight: 700;
+    color: var(--color-pulsar-hover);
+    margin-bottom: 0.6rem;
+    font-size: 0.92rem;
+    border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+    padding-bottom: 0.4rem;
+}
+.tafsir-text {
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--text-luminous);
+}
+
+/* ==========================================================================
+   6. منطقة المدخلات المؤمنة السفلية (Bottom Safe-Input Component)
+   ========================================================================== */
+.chat-footer-input {
+    background-color: var(--bg-nebula-void);
+    border-top: 1px solid rgba(148, 163, 184, 0.05);
+    padding: 1.1rem 1.8rem;
+    padding-bottom: calc(1.1rem + env(safe-area-inset-bottom)); /* الحماية لشاشات الآيفون نوتش */
+    z-index: 10;
+}
+
+.input-area {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-star-cluster);
+    border: 1px solid rgba(148, 163, 184, 0.06);
+    border-radius: var(--radius-lg);
+    padding: 0.45rem;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-cosmic);
+    transition: border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+.input-area:focus-within {
+    border-color: var(--color-aurora-blue);
+    box-shadow: 0 0 22px rgba(59, 130, 246, 0.15), var(--shadow-cosmic);
+}
+
+.input-area input[type="text"] {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-pure);
+    font-size: 0.98rem;
+    font-family: var(--font-ui);
+    padding: 0.65rem 0.6rem;
+    min-width: 50px;
+}
+.input-area input[type="text"]::placeholder {
+    color: var(--text-faded);
+}
+
+.input-action-btn {
+    background-color: var(--color-aurora-blue);
+    color: var(--text-pure);
+    border: none;
+    width: 44px;
+    height: 44px; /* قياس آمن تكتيكي للمس الإنساني */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: var(--transition-bounce);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+.input-action-btn svg {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--transition-smooth);
+}
+.input-action-btn:hover {
+    background-color: var(--color-aurora-hover);
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 6px 15px var(--color-aurora-glow);
+}
+.input-action-btn.secondary-btn {
+    background-color: transparent;
+    color: var(--text-celestial);
+    box-shadow: none;
+}
+.input-action-btn.secondary-btn:hover {
+    color: var(--text-pure);
+    background-color: rgba(148, 163, 184, 0.08);
+}
+
+/* الحالة النشطة عند تسجيل الصوت */
+.input-action-btn.recording-active {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    border: 1px solid var(--color-error);
+    box-shadow: 0 0 15px var(--color-error-glow) !important;
+    animation: voicePulse 1.5s infinite ease-in-out;
+}
+@keyframes voicePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ==========================================================================
+   7. وضع الخشوع المطور المذهل (Immersive Zen Mode Component)
+   ========================================================================== */
+.zen-mode-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at center, rgba(3, 7, 18, 0.99) 0%, var(--bg-space-deep) 100%);
+    z-index: 2000;
+    display: none; /* يتم التحكم بالظهور عبر جافا سكريبت */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2.2rem;
+    transition: opacity var(--transition-smooth);
+}
+
+.zen-display-container {
+    max-width: 950px;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.zen-ayah {
+    font-family: var(--font-quran);
+    font-size: 3rem;
+    line-height: 2.2;
+    color: var(--text-pure);
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.25), 0 0 35px var(--color-aurora-glow);
+    margin-bottom: 2rem;
+    animation: zenFadeIn 1.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.zen-surah-info {
+    font-size: 1.2rem;
+    color: var(--text-celestial);
+    letter-spacing: 1px;
+    opacity: 0.75;
+    animation: zenFadeIn 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.35s both;
+}
+
+@keyframes zenFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.zen-close-btn {
+    position: absolute;
+    top: calc(1.2rem + env(safe-area-inset-top));
+    left: 1.2rem;
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-pure);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: var(--transition-bounce);
+}
+.zen-close-btn svg {
+    width: 20px;
+    height: 20px;
+}
+.zen-close-btn:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-color: var(--color-error);
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* أزرار ملاحة الخشوع للمصحف الإلكتروني */
+.zen-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-pure);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: var(--transition-bounce);
+}
+.zen-nav-btn:hover {
+    background-color: rgba(59, 130, 246, 0.15);
+    border-color: var(--color-aurora-blue);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 15px var(--color-aurora-glow);
+}
+#zen-nav-prev { right: 1.5rem; }
+#zen-nav-next { left: 1.5rem; }
+
+/* ==========================================================================
+   8. التجاوب وتجربة مثل-التطبيق على الهواتف (Responsive & Native App Experience)
+   ========================================================================== */
+
+/* زر الهمبرغر العائم للهواتف الذكية */
+.sidebar-toggle-btn {
+    display: none; /* مخفي افتراضياً على شاشات الديسكتوب */
+}
+
+@media (max-width: 768px) {
+    /* تفعيل وضع محاكاة التطبيقات الأصيلة للهواتف (Native App Architecture) */
+    
+    .sidebar-toggle-btn {
+        display: flex;
+        position: fixed;
+        top: calc(12px + env(safe-area-inset-top));
+        right: 12px;
+        z-index: 1001;
+        background-color: var(--bg-star-cluster);
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        color: var(--text-pure);
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-cosmic);
+        transition: var(--transition-bounce);
+    }
+    .sidebar-toggle-btn:active {
+        transform: scale(0.9);
+    }
+    .sidebar-toggle-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* الشريط الجانبي ينبثق كأنه قائمة جانبية هاتفية (Slide Drawer) */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        height: 100%;
+        width: 290px;
+        min-width: 290px;
+        transform: translateX(100%); /* البداية مخفي لليمين */
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+        border-left: none;
+        border-right: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    .sidebar.open {
+        transform: translateX(0); /* الكلاس النشط المربوط بجافا سكريبت */
+    }
+
+    /* تعديل ترويسة الشات لإفساح مجال لزر الهامبرغر */
+    .chat-header {
+        direction: ltr;
+    }
+    .chat-header .app-title {
+        font-size: 1rem;
+    }
+
+    /* حماية وتكبير الفقاعات على الهواتف */
+    .message-area-container {
+        padding: 1.3rem 1.1rem;
+    }
+    .message-bubble {
+        max-width: 90%;
+        padding: 0.95rem 1.2rem;
+        font-size: 0.93rem;
+    }
+    .message-bubble.quran .ayah-text {
+        font-size: 1.7rem;
+        line-height: 2.1;
+    }
+
+    /* تخصيص مساحات وضع الخشوع لتجنب تداخل الأزرار على الهواتف */
+    .zen-ayah {
+        font-size: 1.9rem;
+        line-height: 2;
+    }
+    .zen-surah-info {
+        font-size: 0.98rem;
+    }
+    
+    .zen-nav-btn {
+        width: 44px;
+        height: 44px;
+    }
+    #zen-nav-prev { right: 0.5rem; }
+    #zen-nav-next { left: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+    /* تحسينات فائقة للهواتف الضيقة جداً */
+    .chat-header .app-title {
+        display: none; /* إخفاء النص الطويل واستخدام الشعار كبديل بصري */
+    }
+    .input-area {
+        gap: 0.3rem;
+    }
+    .input-area input[type="text"] {
+        padding: 0.55rem 0.3rem;
+        font-size: 0.92rem;
+    }
+    .input-action-btn {
+        width: 40px;
+        height: 40px;
+    }
+}

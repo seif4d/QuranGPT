@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <!-- تحسينات محركات البحث والـ SEO -->
+    <title>قرآني معاي | رفيقك الرقمي لتدبر القرآن الكريم</title>
+    <meta name="description" content="منصة ذكية وتفاعلية لقراءة وتدبر القرآن الكريم، وتتبع ختمتك اليومية بأسلوب عصري مبسط يدعم وضع الخشوع.">
+    <meta name="theme-color" content="#0A0F18">
+    
+    <!-- أيقونات التطبيق ومفضلات المتصفح -->
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    
+    <!-- خطوط الويب المتناسقة مع طابع التطبيق الروحي والتقني -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@300;400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- ورقة التنسيق الرئيسية -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- 1. شاشة التحميل الذكية الفورية لمنع وميض الصفحة (Flash of Unstyled Content) -->
+    <div id="app-loading-overlay" class="loading-overlay" aria-live="polite" aria-busy="true">
+        <div class="loader-content">
+            <div class="loader-logo">قرآني<span>معاي</span></div>
+            <p class="loader-status">جاري تهيئة البيئة الروحية...</p>
+            <div class="loading-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- زر الهامبرغر العائم للهواتف المحمولة للتحكم بالقائمة الجانبية -->
+    <button class="sidebar-toggle-btn" id="sidebar-toggle" aria-label="فتح وإغلاق القائمة الجانبية" aria-controls="sidebar" aria-expanded="false">
+        <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- الحاوية الرئيسية للتطبيق -->
+    <div class="app-container">
+
+        <!-- 2. القائمة الجانبية (Sidebar component) -->
+        <aside class="sidebar" id="sidebar" role="complementary" aria-label="أدوات وملاحة التطبيق">
+            <div class="sidebar-header">
+                <div class="logo" translate="no">قرآني<span>معاي</span></div>
+            </div>
+            
+            <nav class="sidebar-nav" aria-label="الملاحة الرئيسية">
+                <!-- الملاحة العلوية للتحكم بالدردشات -->
+                <ul id="sidebar-main-nav" class="nav-list">
+                    <li>
+                        <a href="#" id="nav-new-chat" class="nav-link active" role="button">
+                            <span class="nav-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </span>
+                            <span class="nav-text">محادثة جديدة</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- تصنيف المحادثات الأخيرة المسترجعة ديناميكياً -->
+                <div class="nav-section-container">
+                    <span class="nav-section-title">المحادثات الأخيرة</span>
+                    <ul class="recent-recitations-list" id="recent-recitations-list-ui" role="list">
+                        <!-- تضاف عناصر المحادثات هنا عبر جافا سكريبت تلقائياً -->
+                    </ul>
+                </div>
+
+                <!-- ملاحة الخدمات والمزايا الإضافية -->
+                <ul id="sidebar-other-nav" class="nav-list secondary-nav">
+                    <li>
+                        <a href="#" id="nav-zen-mode-toggle" class="nav-link highlight-link" role="button">
+                            <span class="nav-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                </svg>
+                            </span>
+                            <span class="nav-text">وضع الخشوع</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 3. واجهة المحادثة الرئيسية (Chat Interface) -->
+        <main class="chat-interface" id="chat-interface" role="main">
+            <!-- ترويسة الدردشة -->
+            <header class="chat-header">
+                 <h1 class="app-title" id="chat-interface-title">محادثة تدبرية مع القرآن</h1>
+                 <div class="chat-tools">
+                     <button id="quick-search-btn" class="tool-action-btn" aria-label="بحث سريع في آيات القرآن الكريم" title="بحث سريع">
+                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                             <circle cx="11" cy="11" r="8"></circle>
+                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                         </svg>
+                     </button>
+                     <button id="browse-surahs-btn" class="tool-action-btn" aria-label="تصفح قائمة السور والأجزاء" title="تصفح السور">
+                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                         </svg>
+                     </button>
+                 </div>
+            </header>
+
+            <!-- مساحة عرض الرسائل والآيات المستدعاة -->
+            <section class="message-area-container" aria-label="سجل المحادثة وتدبر الآيات">
+                <div class="message-area" id="message-area" role="log" aria-relevant="additions" aria-live="polite">
+                    <!-- تضاف الرسائل والآيات هنا ديناميكياً بواسطة جافا سكريبت -->
+                </div>
+            </section>
+
+            <!-- منطقة حقل الإدخال الآمن -->
+            <footer class="chat-footer-input">
+                <div class="input-area">
+                    <button id="send-btn" class="input-action-btn" aria-label="إرسال الطلب" title="إرسال">
+                        <svg class="icon-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                    
+                    <input type="text" id="user-input" 
+                           placeholder="اكتب اسم السورة، آية معينة، أو ابحث عن موضوع (مثال: آيات عن الصبر)..." 
+                           autocomplete="off" 
+                           aria-label="حقل كتابة الأسئلة أو طلبات تصفح السور">
+                    
+                    <button id="voice-input-btn" class="input-action-btn secondary-btn" aria-label="البحث عن طريق الإدخال الصوتي" title="البحث الصوتي">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                            <line x1="8" y1="23" x2="16" y2="23"></line>
+                        </svg>
+                    </button>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- 4. واجهة وضع الخشوع (Zen Mode Overlay) -->
+    <div class="zen-mode-overlay" id="zen-mode-overlay" role="dialog" aria-modal="true" aria-label="وضع الخشوع لتدبر الآيات" aria-hidden="true">
+        <button class="zen-close-btn" id="zen-close-btn" aria-label="إغلاق وضع الخشوع والعودة للدردشة">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        
+        <article class="zen-display-container">
+            <div class="zen-ayah" id="zen-ayah-display" role="document">
+                <!-- تعرض الآية هنا بخط قرآني كبير مريح للعين -->
+            </div>
+            <div class="zen-surah-info" id="zen-surah-info-display">
+                <!-- تفاصيل السورة ورقم الآية -->
+            </div>
+        </article>
+    </div>
+
+    <!-- تفعيل مكتبة جافا سكريبت البرمجية الرئيسية بعد بناء DOM بالكامل -->
+    <script src="js/main.js" defer></script>
+</body>
+</html>
